@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.15
+
 import socketserver
 from socket import socket
 from sys import argv, exit
