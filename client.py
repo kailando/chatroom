@@ -13,7 +13,7 @@ LISTEN_PORT = None
 def disconnect(*args, sock=None, **kwargs):
     send_message(sock, f"DCON\n{USERNAME}")
     print("[INFO] Disconnected.")
-    sock.shutdown() # pyright: ignore[reportOptionalMemberAccess]
+    sock.stop() # pyright: ignore[reportOptionalMemberAccess]
     exit(*args, **kwargs)
 
 def listen_loop(sock):
