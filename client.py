@@ -25,6 +25,7 @@ def listen_loop(sock):
                     case "ERR:UNKNOWN_CMD":
                         print("! Client error - malformed request")
                         exit(1)
+                continue
                     
             if msg=="EEND":
                 print("Kicked off.")
