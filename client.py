@@ -42,7 +42,7 @@ def listen_loop(sock):
                 break
             print(f"\r{msg}", end="\n> ")
         except Exception as e:
-            print(f"[ERR] Listener crashed: {e}")
+            print(f"! Listener crashed: {e}")
             break
 
 def send_message(sock, msg):
