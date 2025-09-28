@@ -1,7 +1,8 @@
-#!/usr/bin/env python3.15
+#!/usr/bin/env python3.13
+# -*- coding=utf-8 -*-
+# pyright: reportAttributeAccessIssue=false
 
 import socketserver
-from socket import socket
 from sys import argv, exit
 
 class Handler(socketserver.BaseRequestHandler):
@@ -56,6 +57,16 @@ class Handler(socketserver.BaseRequestHandler):
         elif cmd == "ALLS":
             print(f"person listing to {data[1]}")
             self.server.socket.sendto(("\n".join(self.server.data["connected_users"].keys())).encode("utf-8"), client_address)
+
+        # Too OP, hacked clients could ALLS -> KICK and clear the server, and I deleted modbot
+        #elif cmd == "KICK":
+        #    username = data[1]
+        #    print(f"'{username}' disconnected")
+        #    try:
+        #        del self.server.data["connected_users"][username]
+        #        self.server.socket.sendto(b"EEND", client_address)
+        #    except KeyError:
+        #        self.server.socket.sendto(b"ERR:USER", client_address)
 
         else:
             self.server.socket.sendto(b"ERR:UNKNOWN_CMD", client_address)

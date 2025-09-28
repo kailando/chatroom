@@ -1,4 +1,5 @@
-#!/usr/bin/env python3.15
+#!/usr/bin/env python3.13
+# -*- coding=utf-8 -*-
 
 import socket
 import threading
@@ -16,6 +17,10 @@ def listen_loop(sock):
             msg=msg.decode("utf-8")
             if msg=="OK" or msg.startswith("ERR"):
                 continue
+            if msg=="EEND":
+                print("Kicked off.")
+                sock.shutdown()
+                break
             print(f"\r{msg}", end="\n> ")
         except Exception as e:
             print(f"[ERR] Listener crashed: {e}")
@@ -90,6 +95,7 @@ try:
             payload = f"GLOB\n{USERNAME}\n{user_input}"
             send_message(sock, payload)
 
-except KeyboardInterrupt:
+except (KeyboardInterrupt, EOFError):
     send_message(sock, f"DCON\n{USERNAME}")
     print("\n[INFO] Disconnected by Ctrl+C.")
+    sock.close()
