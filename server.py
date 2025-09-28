@@ -53,7 +53,7 @@ class Handler(socketserver.BaseRequestHandler):
             try:
                 addr = self.server.data["connected_users"][recipient]
                 self.server.socket.sendto(msg, addr)
-                self.server.socket.sendto(msg, )
+                self.server.socket.sendto(msg, client_address)
             except KeyError:
                 self.server.socket.sendto(b"ERR:USER", client_address)
 
