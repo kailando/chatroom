@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.13
+#!/usr/bin/env python3.15
 # -*- coding=utf-8 -*-
 
 import socket
