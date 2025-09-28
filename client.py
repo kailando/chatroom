@@ -15,8 +15,17 @@ def listen_loop(sock):
         try:
             msg, _ = sock.recvfrom(4096)
             msg=msg.decode("utf-8")
-            if msg=="OK" or msg.startswith("ERR"):
+            if msg=="OK":
                 continue
+            if msg.startswith("ERR"):
+                match msg:
+                    case "ERR:USER":
+                        print("! User does not exist")
+                    
+                    case "ERR:UNKNOWN_CMD":
+                        print("! Client error - malformed request")
+                        exit(1)
+                    
             if msg=="EEND":
                 print("Kicked off.")
                 sock.shutdown()

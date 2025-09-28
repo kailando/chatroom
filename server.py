@@ -37,8 +37,8 @@ class Handler(socketserver.BaseRequestHandler):
             msg_raw = f"[{sender}]: {msg_text}"
             msg = msg_raw.encode("utf-8")
             print(msg_raw)
-            for name, addr in self.server.data["connected_users"].items():
-                if name != sender:
+            for _, addr in self.server.data["connected_users"].items():
+                #if name != sender:
                     self.server.socket.sendto(msg, addr)
 
         elif cmd == "PERS":
@@ -51,6 +51,7 @@ class Handler(socketserver.BaseRequestHandler):
             try:
                 addr = self.server.data["connected_users"][recipient]
                 self.server.socket.sendto(msg, addr)
+                self.server.socket.sendto(msg, )
             except KeyError:
                 self.server.socket.sendto(b"ERR:USER", client_address)
 
