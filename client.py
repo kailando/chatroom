@@ -10,7 +10,7 @@ SERVER = None
 USERNAME = None
 LISTEN_PORT = None
 
-def disconnect(*args, sock=None, **kwargs):
+def disconnect(*args, sock: socket.socket | None = None, **kwargs):
     send_message(sock, f"DCON\n{USERNAME}")
     print("[INFO] Disconnected.")
     sock.close() # pyright: ignore[reportOptionalMemberAccess]
@@ -73,9 +73,13 @@ try:
         if user_input.strip() == "/quit":
             disconnect(0, sock=sock)
 
+        elif user_input.strip() == "/clear":
+            print("\33c",end="")
+        
         elif user_input.strip() == "/help":
             print("Commands:")
             print("/quit - exit kindly; you also may use Ctrl+C")
+            print("/clear - clear the screen")
             print("/help - show this message")
             print("/recon - disconnect and reconnect w/ the same name")
             print("/name <new_name> - same as /recon but with a different name; you may use spaces in your new")
@@ -90,7 +94,7 @@ try:
             print("If the user doesn't exist, prints '! User does not exist'")
             print("It's unaccessable to every user except you and the reciptent - the server literally doesn't send it.")
             print("But the server logs it.")
-
+            
         elif user_input.strip() == "/recon":
             send_message(sock, f"DCON\n{USERNAME}")
             send_message(sock, f"CONN\n{USERNAME}")
