@@ -20,7 +20,9 @@ class Handler(socketserver.BaseRequestHandler):
             # Store the client address tuple, NOT the socket!
             if not username in list(self.server.data["connected_users"].keys()):
                 self.server.data["connected_users"][username] = client_address
-            self.server.socket.sendto(b"OK", client_address)
+                self.server.socket.sendto(b"OK", client_address)
+            else:
+                self.server.socket.sendto(b"ERR:TOOK", client_address)
 
         elif cmd == "DCON":
             username = data[1]

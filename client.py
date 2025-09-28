@@ -10,6 +10,12 @@ SERVER = None
 USERNAME = None
 LISTEN_PORT = None
 
+def disconnect(*args, sock=None, **kwargs):
+    send_message(sock, f"DCON\n{USERNAME}")
+    print("[INFO] Disconnected.")
+    sock.shutdown() # pyright: ignore[reportOptionalMemberAccess]
+    exit(*args, **kwargs)
+
 def listen_loop(sock):
     while True:
         try:
@@ -24,7 +30,10 @@ def listen_loop(sock):
                     
                     case "ERR:UNKNOWN_CMD":
                         print("! Client error - malformed request")
-                        exit(1)
+                    
+                    case "ERR:TOOK":
+                        print("! Username took")
+                        disconnect(1, sock=sock)
                 continue
                     
             if msg=="EEND":
@@ -62,14 +71,39 @@ try:
     while True:
         user_input = input("> ")
         if user_input.strip() == "/quit":
-            send_message(sock, f"DCON\n{USERNAME}")
-            print("[INFO] Disconnected.")
-            break
+            disconnect(0, sock=sock)
+
+        elif user_input.strip() == "/help":
+            print("Commands:")
+            print("/quit - exit kindly; you also may use Ctrl+C")
+            print("/help - show this message")
+            print("/recon - disconnect and reconnect w/ the same name")
+            print("/name <new_name> - same as /recon but with a different name; you may use spaces in your new")
+            print("  name at the cost of not being able to be DMed")
+            print("/who - Get a listing of everyone")
+            print("/roll ndx - roll n of a dice with x sides")
+            print("/roll dx - same as /roll 1dx")
+            print("/roll x - same as /roll dx")
+            print()
+            print("DMing:")
+            print("Use @username message to send a private DM.")
+            print("If the user doesn't exist, prints '! User does not exist'")
+            print("It's unaccessable to every user except you and the reciptent - the server literally doesn't send it.")
+            print("But the server logs it.")
 
         elif user_input.strip() == "/recon":
             send_message(sock, f"DCON\n{USERNAME}")
             send_message(sock, f"CONN\n{USERNAME}")
 
+        elif user_input.strip() == "/name":
+            try:
+                _, name = user_input.split(" ", 1)
+                send_message(sock, f"DCON\n{USERNAME}")
+                USERNAME = name
+                send_message(sock, f"CONN\n{USERNAME}")
+            except ValueError:
+                print("! Use format: /name new username\nSpaces are allowed")
+        
         elif user_input.strip() == "/who":
             send_message(sock, f"ALLS\n{USERNAME}")
 
@@ -98,7 +132,7 @@ try:
                 payload = f"PERS\n{USERNAME}\n{recipient}\n{msg}"
                 send_message(sock, payload)
             except ValueError:
-                print("[ERR] Use format: @username message")
+                print("! Use format: @username message")
 
         else:
             # Global broadcast
@@ -106,6 +140,5 @@ try:
             send_message(sock, payload)
 
 except (KeyboardInterrupt, EOFError):
-    send_message(sock, f"DCON\n{USERNAME}")
     print("\n[INFO] Disconnected by Ctrl+C.")
-    sock.close()
+    disconnect(0, sock=sock)
