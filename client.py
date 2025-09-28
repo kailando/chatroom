@@ -71,7 +71,7 @@ try:
             send_message(sock, f"CONN\n{USERNAME}")
 
         elif user_input.strip() == "/who":
-            send_message(sock, "ALLS")
+            send_message(sock, f"ALLS\n{USERNAME}")
 
         elif user_input.strip().startswith("/roll"):
             _, die = tuple(user_input.strip().split())
