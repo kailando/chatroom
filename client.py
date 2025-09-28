@@ -108,22 +108,25 @@ try:
             send_message(sock, f"ALLS\n{USERNAME}")
 
         elif user_input.strip().startswith("/roll"):
-            _, die = tuple(user_input.strip().split())
-            if (die[0].isdigit()) and ("d" in die):
-                die = die.split("d")
-                times = int(die[0])
-                die = int(die[1])
-                for _ in range(times):
+            try:
+                _, die = tuple(user_input.strip().split())
+                if (die[0].isdigit()) and ("d" in die):
+                    die = die.split("d")
+                    times = int(die[0])
+                    die = int(die[1])
+                    for _ in range(times):
+                        roll = randint(1, die)
+                        print(f"You got a {roll}!")
+                        payload = f"GLOB\n{USERNAME}\nI rolled a d{die} and got {roll}!"
+                        send_message(sock, payload)
+                else:
+                    die = int(die.removeprefix("d"))
                     roll = randint(1, die)
                     print(f"You got a {roll}!")
                     payload = f"GLOB\n{USERNAME}\nI rolled a d{die} and got {roll}!"
                     send_message(sock, payload)
-            else:
-                die = int(die.removeprefix("d"))
-                roll = randint(1, die)
-                print(f"You got a {roll}!")
-                payload = f"GLOB\n{USERNAME}\nI rolled a d{die} and got {roll}!"
-                send_message(sock, payload)
+            except ValueError as err:
+                print(f"[ERR] {err}")
 
         elif user_input.startswith("@"):
             # Personal message: format @recipient message
