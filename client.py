@@ -126,7 +126,7 @@ try:
                     payload = f"GLOB\n{USERNAME}\nI rolled a d{die} and got {roll}!"
                     send_message(sock, payload)
             except ValueError as err:
-                print(f"[ERR] {err}")
+                print(f"! {err}")
 
         elif user_input.startswith("@"):
             # Personal message: format @recipient message
