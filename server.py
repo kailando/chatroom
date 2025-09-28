@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.15
+#!/usr/bin/env python3.13
 # -*- coding=utf-8 -*-
 # pyright: reportAttributeAccessIssue=false
 
