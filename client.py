@@ -50,11 +50,16 @@ def send_message(sock, msg):
 
 if len(argv) < 5:
     print(f"Usage: {argv[0]} <server_host> <server_port> <username> <client_port>")
-    exit(1)
-
-SERVER = (argv[1], int(argv[2]))
-USERNAME = argv[3]
-LISTEN_PORT = int(argv[4])
+    print(f"Assuming interactive mode.")
+    server_ip = input("Please enter server ip: ")
+    server_port = input("Please enter server port: ")
+    SERVER = (server_ip, int(server_port))
+    USERNAME = input("Please enter your username: ")
+    LISTEN_PORT = randint(49152,65535)
+else:
+    SERVER = (argv[1], int(argv[2]))
+    USERNAME = argv[3]
+    LISTEN_PORT = int(argv[4])
 
 # --- Set up UDP socket ---
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
